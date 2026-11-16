@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atomic Theory Quiz — CHE31101 · LUANAR</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0e16;
+  --surface: #161824;
+  --surface2: #1f2232;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text: #f0f0f5;
+  --muted: #8e92ad;
+  --accent: #3ddc84;
+  --accent2: #1fa65a;
+  --green: #2ecc7e;
+  --red: #ff5c6a;
+  --amber: #ffbb3d;
+  --pill-bg: rgba(61,220,132,0.13);
+  --pill-border: rgba(61,220,132,0.35);
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.65; min-height: 100vh; }
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: linear-gradient(rgba(61,220,132,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(61,220,132,0.035) 1px, transparent 1px);
+  background-size: 40px 40px; pointer-events: none; z-index: 0;
+}
+.wrap { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 0 20px 80px; }
+.screen { display: none; animation: fadeUp 0.4s ease; }
+.screen.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
+nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+.nav-logo { font-family: var(--font-display); font-weight: 800; font-size: 15px; letter-spacing: 0.05em; color: var(--accent); }
+.nav-logo span { color: var(--muted); font-weight: 400; }
+.nav-links { display: flex; gap: 6px; }
+.nav-btn { background: transparent; border: 1px solid var(--border2); color: var(--muted); padding: 6px 14px; border-radius: 40px; font-size: 12px; font-family: var(--font-body); cursor: pointer; transition: all 0.2s; }
+.nav-btn:hover, .nav-btn.active { border-color: var(--accent); color: var(--accent); background: var(--pill-bg); }
+.hero { padding: 60px 0 40px; }
+.hero-tag { display: inline-flex; align-items: center; gap: 8px; background: var(--pill-bg); border: 1px solid var(--pill-border); color: var(--accent); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 40px; margin-bottom: 28px; }
+.hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+h1 { font-family: var(--font-display); font-size: clamp(34px, 6vw, 54px); font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 18px; }
+h1 em { font-style: normal; color: var(--accent); }
+.hero-sub { font-size: 15px; color: var(--muted); max-width: 500px; margin-bottom: 36px; line-height: 1.7; }
+.hero-stats { display: flex; gap: 28px; margin-bottom: 40px; }
+.stat-n { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--text); }
+.stat-l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+.register-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; padding: 32px; margin-bottom: 40px; }
+.register-card h2 { font-family: var(--font-display); font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+.register-card p { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.form-row.full { grid-template-columns: 1fr; }
+label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 6px; }
+input { width: 100%; background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; color: var(--text); font-family: var(--font-body); font-size: 14px; padding: 10px 14px; outline: none; transition: border-color 0.2s; }
+input:focus { border-color: var(--accent); }
+input::placeholder { color: var(--muted); }
+.topic-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.topic-toggle { background: var(--surface2); border: 1px solid var(--border2); color: var(--muted); padding: 6px 14px; border-radius: 40px; font-size: 12px; cursor: pointer; font-family: var(--font-body); transition: all 0.2s; }
+.topic-toggle.on { background: var(--pill-bg); border-color: var(--pill-border); color: var(--accent); }
+.btn { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-body); font-size: 14px; font-weight: 500; padding: 11px 22px; border-radius: 40px; cursor: pointer; border: none; transition: all 0.2s; }
+.btn-primary { background: var(--accent); color: #0d0e16; font-weight: 700; }
+.btn-primary:hover { background: #6ff0a8; transform: translateY(-1px); }
+.btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--muted); }
+.btn-ghost:hover { color: var(--text); background: var(--surface2); }
+.btn-sm { padding: 7px 16px; font-size: 13px; }
+.progress-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.progress-label { font-size: 12px; color: var(--muted); }
+.progress-score { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--accent); }
+.progress-track { height: 3px; background: var(--surface2); border-radius: 3px; margin-bottom: 28px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); border-radius: 3px; transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+.q-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; padding: 28px 28px 20px; margin-bottom: 16px; }
+.q-section-tag { display: inline-block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); background: var(--pill-bg); border: 1px solid var(--pill-border); padding: 3px 10px; border-radius: 40px; margin-bottom: 14px; }
+.q-text { font-family: var(--font-display); font-size: 18px; font-weight: 600; line-height: 1.4; color: var(--text); margin-bottom: 22px; }
+.options { display: grid; gap: 9px; }
+.opt-btn { display: flex; align-items: flex-start; gap: 12px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; padding: 13px 16px; text-align: left; cursor: pointer; width: 100%; font-family: var(--font-body); font-size: 14px; color: var(--text); transition: all 0.2s; line-height: 1.5; }
+.opt-btn:hover:not(:disabled) { border-color: var(--accent); background: rgba(61,220,132,0.07); }
+.opt-btn:disabled { cursor: default; }
+.opt-letter { min-width: 24px; height: 24px; border-radius: 6px; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--muted); font-family: var(--font-display); flex-shrink: 0; margin-top: 1px; }
+.opt-btn.correct { border-color: var(--green); background: rgba(46,204,126,0.08); }
+.opt-btn.correct .opt-letter { background: var(--green); color: #0d0e16; }
+.opt-btn.wrong { border-color: var(--red); background: rgba(255,92,106,0.08); }
+.opt-btn.wrong .opt-letter { background: var(--red); color: #fff; }
+.feedback-box { border-radius: 10px; padding: 14px 16px; font-size: 13px; line-height: 1.65; margin-bottom: 14px; display: none; }
+.feedback-box.correct { background: rgba(46,204,126,0.1); border: 1px solid rgba(46,204,126,0.3); color: #7ef0b0; }
+.feedback-box.wrong { background: rgba(255,92,106,0.1); border: 1px solid rgba(255,92,106,0.3); color: #ffa0a8; }
+.feedback-box strong { display: block; margin-bottom: 4px; font-family: var(--font-display); font-size: 13px; }
+.discussion-section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 16px; display: none; }
+.discussion-section h4 { font-family: var(--font-display); font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+.comments-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; max-height: 260px; overflow-y: auto; }
+.comment { background: var(--surface2); border-radius: 8px; padding: 10px 12px; font-size: 13px; }
+.comment-author { font-weight: 500; color: var(--accent); font-size: 12px; margin-bottom: 3px; }
+.comment-text { color: var(--text); line-height: 1.5; }
+.comment-time { font-size: 10px; color: var(--muted); margin-top: 4px; }
+.comment-input-row { display: flex; gap: 8px; }
+.comment-input-row input { flex: 1; }
+.no-comments { font-size: 12px; color: var(--muted); font-style: italic; }
+.quiz-nav { display: flex; align-items: center; justify-content: space-between; }
+.result-hero { text-align: center; padding: 60px 0 40px; }
+.result-ring { width: 140px; height: 140px; border-radius: 50%; background: conic-gradient(var(--accent) var(--pct, 0%), var(--surface2) 0%); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; box-shadow: 0 0 40px rgba(61,220,132,0.22); }
+.result-ring-inner { width: 108px; height: 108px; border-radius: 50%; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.result-pct { font-family: var(--font-display); font-size: 32px; font-weight: 800; }
+.result-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.result-title { font-family: var(--font-display); font-size: 28px; font-weight: 700; margin-bottom: 10px; }
+.result-sub { color: var(--muted); max-width: 440px; margin: 0 auto 32px; font-size: 14px; line-height: 1.65; }
+.result-breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 36px; }
+.breakdown-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 18px; text-align: center; }
+.breakdown-n { font-family: var(--font-display); font-size: 28px; font-weight: 700; }
+.breakdown-n.green { color: var(--green); } .breakdown-n.red { color: var(--red); } .breakdown-n.amber { color: var(--amber); }
+.breakdown-l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-top: 4px; }
+.lb-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; overflow: hidden; margin-bottom: 24px; }
+.lb-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.lb-header h3 { font-family: var(--font-display); font-size: 17px; font-weight: 700; }
+.lb-row { display: flex; align-items: center; gap: 16px; padding: 14px 24px; border-bottom: 1px solid var(--border); transition: background 0.15s; }
+.lb-row:last-child { border-bottom: none; }
+.lb-row:hover { background: var(--surface2); }
+.lb-rank { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--muted); width: 28px; text-align: center; flex-shrink: 0; }
+.lb-rank.gold { color: #ffd700; } .lb-rank.silver { color: #c0c0c0; } .lb-rank.bronze { color: #cd7f32; }
+.lb-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.lb-info { flex: 1; }
+.lb-name { font-size: 14px; font-weight: 500; }
+.lb-meta { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.lb-score-wrap { text-align: right; }
+.lb-score { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--accent); }
+.lb-pct { font-size: 11px; color: var(--muted); }
+.lb-empty { padding: 36px 24px; text-align: center; color: var(--muted); font-size: 13px; }
+.badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 40px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+.badge-you { background: rgba(61,220,132,0.15); color: var(--accent); border: 1px solid var(--pill-border); }
+.text-muted { color: var(--muted); } .text-center { text-align: center; } .flex-gap { display: flex; gap: 10px; flex-wrap: wrap; }
+::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+@media(max-width: 560px) { .form-row { grid-template-columns: 1fr; } .result-breakdown { grid-template-columns: 1fr 1fr; } h1 { font-size: 30px; } .q-text { font-size: 16px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="nav-logo">CHE31101<span>/atomic-theory</span></div>
+    <div class="nav-links">
+      <button class="nav-btn active" onclick="showScreen('home')">Quiz</button>
+      <button class="nav-btn" onclick="showScreen('leaderboard')">Leaderboard</button>
+    </div>
+  </nav>
+
+  <div id="screen-home" class="screen active">
+    <div class="hero">
+      <div class="hero-tag">CHE31101 · General Chemistry · LUANAR</div>
+      <h1>Atomic <em>Theory</em><br>Quiz</h1>
+      <p class="hero-sub">Questions drawn directly from your Atomic Theory lecture — Dalton, subatomic particles, relative atomic mass, elements and mixtures, Bohr and quantum numbers, electron configurations, the periodic table and periodic trends.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="stat-n" id="stat-q">0</div><div class="stat-l">Questions</div></div>
+        <div class="stat"><div class="stat-n" id="stat-t">0</div><div class="stat-l">Topics</div></div>
+        <div class="stat"><div class="stat-n" id="stat-players">0</div><div class="stat-l">Attempts</div></div>
+      </div>
+    </div>
+    <div class="register-card">
+      <h2>Register to start</h2>
+      <p>Your name and score will appear on the CHE31101 leaderboard.</p>
+      <div class="form-row">
+        <div><label for="inp-name">Full name</label><input type="text" id="inp-name" placeholder="e.g. Leo Mbamera"></div>
+        <div><label for="inp-reg">Reg. number</label><input type="text" id="inp-reg" placeholder="e.g. 2501013**"></div>
+      </div>
+      <div class="form-row full">
+        <div>
+          <label>Filter topics (tap to deselect)</label>
+          <div class="topic-grid" id="topic-grid"></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="startQuiz()" style="width:100%;justify-content:center;margin-top:4px">Start quiz →</button>
+    </div>
+  </div>
+
+  <div id="screen-quiz" class="screen">
+    <div style="padding-top: 24px;">
+      <div class="progress-header">
+        <span class="progress-label" id="prog-label">Question 1</span>
+        <span class="progress-score" id="prog-score">0 pts</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="q-card">
+        <div class="q-section-tag" id="q-section"></div>
+        <div class="q-text" id="q-text"></div>
+        <div class="options" id="options"></div>
+      </div>
+      <div class="feedback-box" id="feedback"></div>
+      <div class="discussion-section" id="discussion-section">
+        <h4>💬 Group discussion</h4>
+        <div class="comments-list" id="comments-list"></div>
+        <div class="comment-input-row">
+          <input type="text" id="comment-input" placeholder="Add your thought…" maxlength="200" onkeydown="if(event.key==='Enter')postComment()">
+          <button class="btn btn-ghost btn-sm" onclick="postComment()">Post</button>
+        </div>
+      </div>
+      <div class="quiz-nav">
+        <button class="btn btn-ghost" onclick="showScreen('home')">← Exit</button>
+        <button class="btn btn-primary" id="next-btn" onclick="nextQ()" style="display:none">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-result" class="screen">
+    <div class="result-hero">
+      <div class="result-ring" id="result-ring">
+        <div class="result-ring-inner">
+          <div class="result-pct" id="result-pct">0%</div>
+          <div class="result-label">score</div>
+        </div>
+      </div>
+      <div class="result-title" id="result-title">Well done!</div>
+      <div class="result-sub" id="result-sub"></div>
+      <div class="result-breakdown">
+        <div class="breakdown-card"><div class="breakdown-n green" id="bd-correct">0</div><div class="breakdown-l">Correct</div></div>
+        <div class="breakdown-card"><div class="breakdown-n red" id="bd-wrong">0</div><div class="breakdown-l">Wrong</div></div>
+        <div class="breakdown-card"><div class="breakdown-n amber" id="bd-total">0</div><div class="breakdown-l">Total</div></div>
+      </div>
+      <div class="flex-gap" style="justify-content:center">
+        <button class="btn btn-ghost" onclick="restartQuiz()">Retry</button>
+        <button class="btn btn-primary" onclick="showScreen('leaderboard')">View leaderboard →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-leaderboard" class="screen">
+    <div style="padding-top: 32px;">
+      <h2 style="font-family: var(--font-display); font-size: 26px; font-weight: 800; margin-bottom: 6px;">Leaderboard</h2>
+      <p class="text-muted" style="font-size: 13px; margin-bottom: 28px;">CHE31101 — Atomic Theory rankings.</p>
+      <div class="lb-card">
+        <div class="lb-header"><h3>Top scores</h3><span class="text-muted" style="font-size:12px" id="lb-count">0 attempts</span></div>
+        <div id="lb-rows"></div>
+      </div>
+      <div class="text-center"><button class="btn btn-ghost" onclick="showScreen('home')">Take the quiz →</button></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── QUESTION BANK — built from CHE31101 Atomic Theory slides ─────────────────
+const RAW = [
+ {
+  "s": "Dalton's Atomic Theory",
+  "q": "According to Dalton's atomic theory (1808), atoms of a particular element are:",
+  "correct": "Identical in size, shape and mass, and different from atoms of other elements",
+  "wrong": [
+   "Identical in size and shape, but each atom has a slightly different mass",
+   "Different from one another in mass, but similar in all their other properties",
+   "Identical to the atoms of every other element in all chemical properties"
+  ],
+  "exp": "Dalton proposed that atoms of one element are identical in size, shape, mass and all other properties, and differ from atoms of other elements."
+ },
+ {
+  "s": "Dalton's Atomic Theory",
+  "q": "Dalton described a chemical reaction as:",
+  "correct": "A union, rearrangement or separation of atoms",
+  "wrong": [
+   "A change in which atoms are created from energy",
+   "A process in which atoms of one element are destroyed",
+   "A conversion of atoms into smaller indivisible matter"
+  ],
+  "exp": "In Dalton's theory atoms are neither created nor destroyed in a reaction; they are only combined, rearranged or separated."
+ },
+ {
+  "s": "Structure of the Atom",
+  "q": "Thomson's model of the atom pictured it as:",
+  "correct": "A uniform sphere of positive charge with electrons embedded in it",
+  "wrong": [
+   "A tiny dense nucleus with electrons moving around it in empty space",
+   "A hard indivisible sphere with no electrons or protons inside it",
+   "A nucleus of protons and neutrons with electrons in fixed circular orbits"
+  ],
+  "exp": "Thomson's model kept the atom electrically neutral by embedding electrons in a positively charged sphere."
+ },
+ {
+  "s": "Structure of the Atom",
+  "q": "Rutherford's α-particle scattering experiment (1908) led to the conclusion that:",
+  "correct": "An atom has a small central nucleus with all the massive positive charge",
+  "wrong": [
+   "An atom is a uniform sphere of positive charge with electrons embedded",
+   "An atom has electrons that can only occupy fixed energy levels or shells",
+   "An atom contains neutral particles whose mass is slightly above a proton's"
+  ],
+  "exp": "Rutherford proposed the nuclear model: a central nucleus with the positive charge, and electrons in the empty space around it."
+ },
+ {
+  "s": "Structure of the Atom",
+  "q": "Neutrons were discovered in 1932 by:",
+  "correct": "James Chadwick",
+  "wrong": [
+   "J.J. Thomson",
+   "Niels Bohr",
+   "Max Planck"
+  ],
+  "exp": "Chadwick found neutral particles with mass slightly higher than a proton's, and called them neutrons."
+ },
+ {
+  "s": "Structure of the Atom",
+  "q": "The mass number (A) of an atom equals:",
+  "correct": "The number of protons (Z) plus neutrons (N)",
+  "wrong": [
+   "The number of protons (Z) plus electrons",
+   "The number of neutrons (N) minus protons",
+   "The number of electrons plus neutrons (N)"
+  ],
+  "exp": "A = Z + N. For a neutral atom, the atomic number Z also equals the number of electrons."
+ },
+ {
+  "s": "Structure of the Atom",
+  "q": "An atom has atomic number 17 and mass number 35. How many neutrons does it have?",
+  "correct": "18",
+  "wrong": [
+   "17",
+   "35",
+   "52"
+  ],
+  "exp": "N = A − Z = 35 − 17 = 18."
+ },
+ {
+  "s": "Structure of the Atom",
+  "q": "Which comparison of subatomic particles is correct?",
+  "correct": "A proton is about 2000 times heavier than an electron, and a neutron has no charge",
+  "wrong": [
+   "An electron is about 2000 times heavier than a proton, and a neutron has no charge",
+   "A proton and an electron have equal mass, and a neutron carries a positive charge",
+   "A neutron is about 2000 times lighter than an electron, and a proton has no charge"
+  ],
+  "exp": "Electron: −1 charge, negligible mass (~0 amu). Proton: +1, ~1 amu. Neutron: 0 charge, ~1 amu."
+ },
+ {
+  "s": "Structure of the Atom",
+  "q": "What is the maximum number of electrons in the L shell and the N shell?",
+  "correct": "8 in the L shell and 32 in the N shell",
+  "wrong": [
+   "2 in the L shell and 18 in the N shell",
+   "8 in the L shell and 18 in the N shell",
+   "18 in the L shell and 32 in the N shell"
+  ],
+  "exp": "Shell K = 2, L = 8, M = 18, N = 32, O = 50 (these follow 2n²)."
+ },
+ {
+  "s": "Relative Atomic and Formula Mass",
+  "q": "The atomic weight of an element is defined as the:",
+  "correct": "The weighted mean isotopic mass relative to carbon-12 = 12 exactly",
+  "wrong": [
+   "The mass of a single atom measured directly in grams on a balance",
+   "The sum of the protons and electrons in one atom of the element",
+   "The mass of the most abundant isotope relative to hydrogen as 1"
+  ],
+  "exp": "Atomic weight is the weighted mean of the isotope masses relative to carbon-12 = 12.0 exactly. (The scale was originally based on H = 1.)"
+ },
+ {
+  "s": "Relative Atomic and Formula Mass",
+  "q": "Bromine has two isotopes: 78.918 (50.69%) and 80.916 (49.31%). Its atomic weight is closest to:",
+  "correct": "79.90",
+  "wrong": [
+   "79.92",
+   "79.00",
+   "80.00"
+  ],
+  "exp": "(78.918 × 0.5069) + (80.916 × 0.4931) = 40.00 + 39.90 ≈ 79.90."
+ },
+ {
+  "s": "Relative Atomic and Formula Mass",
+  "q": "Using C = 12, H = 1 and O = 16, the relative molecular mass of glucose, C₆H₁₂O₆, is:",
+  "correct": "180",
+  "wrong": [
+   "168",
+   "192",
+   "174"
+  ],
+  "exp": "6(12) + 12(1) + 6(16) = 72 + 12 + 96 = 180."
+ },
+ {
+  "s": "Relative Atomic and Formula Mass",
+  "q": "Given Cu = 63, N = 14 and O = 16, the relative formula mass of Cu(NO₃)₂ is:",
+  "correct": "187",
+  "wrong": [
+   "125",
+   "203",
+   "141"
+  ],
+  "exp": "63 + 2[14 + 3(16)] = 63 + 2(62) = 187."
+ },
+ {
+  "s": "Elements, Compounds & Mixtures",
+  "q": "Which statement correctly defines an element?",
+  "correct": "One that contains only one kind of atom, all with the same atomic number",
+  "wrong": [
+   "One that contains more than one kind of atom, chemically combined",
+   "One that can be broken into simpler substances by chemical means",
+   "One that is a physical mixture of two or more kinds of atoms"
+  ],
+  "exp": "An element cannot be decomposed into simpler substances by chemical means; all its atoms have the same atomic number."
+ },
+ {
+  "s": "Elements, Compounds & Mixtures",
+  "q": "In writing chemical symbols, Co and CO refer to:",
+  "correct": "Co is the element cobalt; CO is carbon monoxide",
+  "wrong": [
+   "Co is carbon monoxide; CO is the element cobalt",
+   "Both are the same element written in two different ways",
+   "Co is a compound of carbon; CO is a compound of cobalt"
+  ],
+  "exp": "The first letter is capitalised and later letters are lower case: Co = cobalt, CO = carbon monoxide."
+ },
+ {
+  "s": "Elements, Compounds & Mixtures",
+  "q": "A pure substance differs from a mixture because a pure substance:",
+  "correct": "Has a definite, constant composition with fixed properties",
+  "wrong": [
+   "Has a composition that you can vary in any way you like",
+   "Has properties that depend on how much of each part is mixed",
+   "Has parts that are only joined physically and not chemically"
+  ],
+  "exp": "Elements and compounds are pure substances. Mixtures can have any composition and their properties vary with it."
+ },
+ {
+  "s": "Elements, Compounds & Mixtures",
+  "q": "Salt dissolved in water forms a:",
+  "correct": "Homogeneous mixture (a solution)",
+  "wrong": [
+   "Heterogeneous mixture (a suspension)",
+   "Pure substance (a compound)",
+   "Pure substance (an element)"
+  ],
+  "exp": "In a homogeneous mixture the particles are evenly dispersed, so you see only one layer. Salt plus black pepper would be heterogeneous."
+ },
+ {
+  "s": "Elements, Compounds & Mixtures",
+  "q": "In a liquid solution, the ______ is the small quantity of substance added to the large quantity of ______.",
+  "correct": "solute; solvent",
+  "wrong": [
+   "solvent; solute",
+   "solution; solute",
+   "solute; solution"
+  ],
+  "exp": "A small quantity of solute is added to a large quantity of solvent; their ratio is the concentration."
+ },
+ {
+  "s": "Quantum Theory & Bohr Model",
+  "q": "What did classical physics fail to explain, leading to quantum theory?",
+  "correct": "The frequency distribution of radiation emitted by a hot solid",
+  "wrong": [
+   "The motion of planets around the Sun and of falling objects",
+   "The speed of a ball rolling down a smooth inclined plane",
+   "The charge carried by the electron in a cathode ray tube"
+  ],
+  "exp": "Classical physics could not explain the observed spectrum of radiation from hot solids. Planck solved it in 1900."
+ },
+ {
+  "s": "Quantum Theory & Bohr Model",
+  "q": "Max Planck assumed that radiating atoms can emit energy only:",
+  "correct": "In discrete bundles called quanta",
+  "wrong": [
+   "In a continuous range of values with no limits",
+   "In whole circular orbits of fixed radius only",
+   "In amounts that equal the mass of an electron"
+  ],
+  "exp": "A quantum is the smallest bundle of energy; energy is quantised, not continuous."
+ },
+ {
+  "s": "Quantum Theory & Bohr Model",
+  "q": "Which statement is part of Bohr's 1913 model of hydrogen?",
+  "correct": "An electron moves in a circular orbit of fixed energy, in certain orbits only",
+  "wrong": [
+   "An electron moves in any orbit and can have any energy value it likes",
+   "An electron moves randomly through a uniform sphere of positive charge",
+   "An electron moves inside the nucleus and shares its energy with protons"
+  ],
+  "exp": "Bohr's restriction meant that electron energies in the orbits are quantised, which explained the line spectrum."
+ },
+ {
+  "s": "Quantum Theory & Bohr Model",
+  "q": "In Bohr's theory, an electron moving from a higher to a lower energy level:",
+  "correct": "Releases energy",
+  "wrong": [
+   "Absorbs energy",
+   "Gains a neutron",
+   "Becomes a proton"
+  ],
+  "exp": "Moving up absorbs energy; moving down releases it. The energy change is governed by the principal quantum number n."
+ },
+ {
+  "s": "Quantum Numbers",
+  "q": "Which pair correctly matches a quantum number with what it describes?",
+  "correct": "Principal n — distance from nucleus; angular momentum l — shape of orbital",
+  "wrong": [
+   "Principal n — shape of orbital; angular momentum l — distance from nucleus",
+   "Magnetic mₗ — distance from nucleus; spin mₛ — shape of orbital",
+   "Magnetic mₗ — direction of spin; spin mₛ — orientation in space"
+  ],
+  "exp": "n: distance/energy; l: shape; mₗ: orientation in space; mₛ: direction of electron spin."
+ },
+ {
+  "s": "Quantum Numbers",
+  "q": "The principal quantum number, n, can have the values:",
+  "correct": "Positive integers: 1, 2, 3, 4 and so on",
+  "wrong": [
+   "Integers from 0 to n − 1 only",
+   "Fractions such as +½ and −½ only",
+   "Integers from −l to +l only"
+  ],
+  "exp": "n = 1, 2, 3 … Larger n means larger orbits, higher energy and greater distance from the nucleus."
+ },
+ {
+  "s": "Quantum Numbers",
+  "q": "An orbital is best described as:",
+  "correct": "The region of space where an electron spends at least 95% of its time",
+  "wrong": [
+   "A fixed circular path followed by an electron around the nucleus itself",
+   "A particle of negative charge that sits inside the nucleus of an atom",
+   "The central region of the atom that holds the protons and the neutrons"
+  ],
+  "exp": "Electrons move as a cloud; the region where an electron spends at least 95% of its time is an orbital."
+ },
+ {
+  "s": "Quantum Numbers",
+  "q": "For a given principal quantum number n, the number of orbitals and the maximum number of electrons are:",
+  "correct": "n² orbitals and 2n² electrons",
+  "wrong": [
+   "2n² orbitals and n² electrons",
+   "n orbitals and 2n electrons",
+   "n² orbitals and n³ electrons"
+  ],
+  "exp": "For n = 3 (M shell): 9 orbitals and 18 electrons."
+ },
+ {
+  "s": "Quantum Numbers",
+  "q": "If n = 3, the possible values of the angular momentum quantum number l are:",
+  "correct": "0, 1 and 2",
+  "wrong": [
+   "1, 2 and 3",
+   "0, 1, 2 and 3",
+   "−2, −1, 0, +1 and +2"
+  ],
+  "exp": "l ranges from 0 to n − 1, so n = 3 gives l = 0 (s), 1 (p) and 2 (d)."
+ },
+ {
+  "s": "Quantum Numbers",
+  "q": "Which subshell has l = 2 and how many orbitals does it contain?",
+  "correct": "d subshell with 5 orbitals",
+  "wrong": [
+   "p subshell with 3 orbitals",
+   "f subshell with 7 orbitals",
+   "s subshell with 1 orbital"
+  ],
+  "exp": "l = 0 s (1 orbital), l = 1 p (3), l = 2 d (5), l = 3 f (7)."
+ },
+ {
+  "s": "Quantum Numbers",
+  "q": "For l = 2, the allowed values of the magnetic quantum number mₗ are:",
+  "correct": "−2, −1, 0, +1, +2",
+  "wrong": [
+   "−1, 0, +1",
+   "0, 1, 2",
+   "−3, −2, −1, 0, +1, +2, +3"
+  ],
+  "exp": "mₗ runs from −l to +l, giving 2l + 1 values."
+ },
+ {
+  "s": "Quantum Numbers",
+  "q": "Degenerate orbitals are orbitals that:",
+  "correct": "Have the same energy",
+  "wrong": [
+   "Have the same shape but different energy",
+   "Hold exactly two electrons with opposite spins",
+   "Lie in the same shell but never in the same subshell"
+  ],
+  "exp": "The three p orbitals of a subshell are degenerate, as are the five d orbitals."
+ },
+ {
+  "s": "Electron Configuration",
+  "q": "The Pauli exclusion principle states that:",
+  "correct": "No two electrons in an atom can have the same set of four quantum numbers",
+  "wrong": [
+   "Electrons fill empty degenerate orbitals before pairing up in any of them",
+   "Electrons fill orbitals in order of increasing energy, from lowest first",
+   "Electrons in the same subshell must all spin in the same direction at once"
+  ],
+  "exp": "So an orbital holds at most two electrons, and these must spin in opposite directions."
+ },
+ {
+  "s": "Electron Configuration",
+  "q": "The maximum number of electrons in an s, p, d and f subshell are, respectively:",
+  "correct": "2, 6, 10 and 14",
+  "wrong": [
+   "1, 3, 5 and 7",
+   "2, 8, 18 and 32",
+   "2, 6, 12 and 20"
+  ],
+  "exp": "Subshell maxima: s = 2, p = 6, d = 10, f = 14."
+ },
+ {
+  "s": "Electron Configuration",
+  "q": "The Aufbau principle describes electron configurations by:",
+  "correct": "Filling subshells in a set 'building-up' order, lowest energy first",
+  "wrong": [
+   "Filling all subshells of one shell at once before the next shell begins",
+   "Putting every electron into the 1s subshell until it is full",
+   "Placing electrons in random subshells so total energy is highest"
+  ],
+  "exp": "Order: 1s < 2s < 2p < 3s < 3p < 4s < 3d < 4p < 5s < 4d < 5p < 6s < 4f < 5d …"
+ },
+ {
+  "s": "Electron Configuration",
+  "q": "What is the electron configuration of a neutral chlorine atom (Z = 17)?",
+  "correct": "1s²2s²2p⁶3s²3p⁵",
+  "wrong": [
+   "1s²2s²2p⁶3s²3p⁶",
+   "1s²2s²2p⁶3s²3p⁴",
+   "1s²2s²2p⁶3s²3p⁵3d¹"
+  ],
+  "exp": "The sum of superscripts equals the atomic number for a neutral atom: 2 + 2 + 6 + 2 + 5 = 17."
+ },
+ {
+  "s": "Electron Configuration",
+  "q": "Hund's rule says that for carbon (1s²2s²2p²) the two 2p electrons:",
+  "correct": "Occupy separate p orbitals, 2pₓ¹2pᵧ¹",
+  "wrong": [
+   "Share the same p orbital, 2pₓ²",
+   "Occupy the 2s orbital with a third electron",
+   "Occupy a 3p orbital as the atom is excited"
+  ],
+  "exp": "Electrons avoid pairing in an orbital while empty degenerate orbitals remain (rule of maximum multiplicity)."
+ },
+ {
+  "s": "Electron Configuration",
+  "q": "Which atom is paramagnetic?",
+  "correct": "Oxygen (1s²2s²2p⁴)",
+  "wrong": [
+   "Helium (1s²)",
+   "Beryllium (1s²2s²)",
+   "Neon (1s²2s²2p⁶)"
+  ],
+  "exp": "Atoms with unpaired electrons are attracted to a magnetic field (paramagnetic). Atoms with all electrons paired (He, Be, Ne) are diamagnetic."
+ },
+ {
+  "s": "Electron Configuration",
+  "q": "Element X has atomic number 54. In which period is it, and is it paramagnetic or diamagnetic?",
+  "correct": "Period 5, diamagnetic (all electrons paired)",
+  "wrong": [
+   "Period 5, paramagnetic (unpaired electrons in 5p)",
+   "Period 6, diamagnetic (all electrons paired)",
+   "Period 4, paramagnetic (unpaired electrons in 4d)"
+  ],
+  "exp": "X (xenon) = …5s²4d¹⁰5p⁶. The highest n is 5, so Period 5, and every orbital is full."
+ },
+ {
+  "s": "The Periodic Table",
+  "q": "The modern periodic table arranges the elements in order of increasing:",
+  "correct": "Atomic number",
+  "wrong": [
+   "Atomic mass",
+   "Atomic radius",
+   "Number of neutrons"
+  ],
+  "exp": "Arranged by atomic number, elements with similar electronic structures recur periodically, so properties recur periodically too."
+ },
+ {
+  "s": "The Periodic Table",
+  "q": "In the periodic table, horizontal rows are ______ and vertical columns are ______.",
+  "correct": "periods; groups (families)",
+  "wrong": [
+   "groups (families); periods",
+   "blocks; periods",
+   "periods; blocks"
+  ],
+  "exp": "Elements in the same group have similar outer electronic structures."
+ },
+ {
+  "s": "The Periodic Table",
+  "q": "Groups 1a and 2a are called the s-block because:",
+  "correct": "Their outer electrons fill the s orbital",
+  "wrong": [
+   "Their outer electrons fill the p orbitals",
+   "Their outer electrons fill the d orbitals",
+   "Their outer electrons fill the f orbitals"
+  ],
+  "exp": "s-block: 1a, 2a. p-block: 3a–8a. d-block (transition elements): 1b–8b. f-block: the two rows at the bottom."
+ },
+ {
+  "s": "The Periodic Table",
+  "q": "The period in which an element appears is given by:",
+  "correct": "The highest principal quantum number in its electronic structure",
+  "wrong": [
+   "The total number of electrons in its s and p orbitals together",
+   "The number of unpaired electrons in its outer shell orbitals",
+   "The number of electrons in its highest principal energy shell"
+  ],
+  "exp": "The group number of a main-group element equals the number of electrons in its highest shell (s and p)."
+ },
+ {
+  "s": "Group Properties",
+  "q": "Group 1a elements are called alkali metals. They have:",
+  "correct": "One outer-shell electron (ns¹) and are soft, malleable conductors",
+  "wrong": [
+   "Two outer-shell electrons (ns²) and are hard, dense conductors",
+   "Seven outer-shell electrons (ns²np⁵) and exist as diatomic molecules",
+   "Eight outer-shell electrons (ns²np⁶) and exist as single atoms"
+  ],
+  "exp": "The first three react violently with water, e.g. 2Na + 2H₂O → 2NaOH + H₂."
+ },
+ {
+  "s": "Group Properties",
+  "q": "Group 2a elements are called alkaline earth metals. Compared with Group 1a, they are:",
+  "correct": "Harder and denser, and they lose their two outer electrons",
+  "wrong": [
+   "Softer and less dense, and they lose one outer electron",
+   "Harder and denser, and they gain two outer electrons",
+   "Softer and less dense, and they gain one outer electron"
+  ],
+  "exp": "Group 2a has ns² structure: Ca → Ca²⁺ + 2e⁻. Be does not react with water, Mg reacts at high temperature, Ca and Sr react with cold water."
+ },
+ {
+  "s": "Group Properties",
+  "q": "Halogens (Group 7a) have the outer structure ns²np⁵ and under normal conditions:",
+  "correct": "Exist as diatomic molecules (F₂, Cl₂ gases; Br₂ liquid; I₂ solid)",
+  "wrong": [
+   "Exist as single atoms (all gases) with very low reactivity",
+   "Exist as soft metals that react violently with cold water",
+   "Exist as macromolecules (all solid) with a high melting point"
+  ],
+  "exp": "Halogens form hydrides (F₂ + H₂ → 2HF) and also interhalogen halides (e.g. BrF, ClF₃)."
+ },
+ {
+  "s": "Group Properties",
+  "q": "The Group 8a elements were once called 'inert' but are now called 'noble' because:",
+  "correct": "Some of them form compounds, such as XeF₄ and XeO₃",
+  "wrong": [
+   "They are very abundant in the atmosphere in large quantities",
+   "They combine readily with themselves as diatomic molecules",
+   "They have incompletely filled outer shells that react easily"
+  ],
+  "exp": "Noble gases have completely filled outer shells (great stability), but since the early 1960s compounds such as XeF₆ and KrF₄ have been made."
+ },
+ {
+  "s": "Atomic Properties & Periodic Trends",
+  "q": "Covalent radius is defined as:",
+  "correct": "Half the distance between the nuclei of two bonded atoms",
+  "wrong": [
+   "The full distance between the nuclei of two bonded atoms",
+   "The distance from the nucleus to the nearest electron",
+   "Half the distance between two atoms that are not bonded"
+  ],
+  "exp": "The edge of an electron cloud is hard to define, so the covalent radius (half the internuclear distance) is used."
+ },
+ {
+  "s": "Atomic Properties & Periodic Trends",
+  "q": "Across a period from left to right, atomic radius generally:",
+  "correct": "Decreases, because effective nuclear charge increases",
+  "wrong": [
+   "Increases, because new energy levels are added across it",
+   "Decreases, because inner shielding increases across it",
+   "Increases, because the nuclear charge decreases across it"
+  ],
+  "exp": "Electrons are added to the same shell while the nucleus gains a proton, so the nucleus pulls the electron cloud in tighter."
+ },
+ {
+  "s": "Atomic Properties & Periodic Trends",
+  "q": "The shielding effect refers to inner electrons:",
+  "correct": "Reducing the pull the nucleus has on the outer electrons",
+  "wrong": [
+   "Increasing the pull the nucleus has on the outer electrons",
+   "Repelling the nucleus so that it splits into protons",
+   "Absorbing light so the atom appears coloured to us"
+  ],
+  "exp": "Shielding lowers the effective nuclear charge on outer electrons, so they are held less tightly."
+ },
+ {
+  "s": "Atomic Properties & Periodic Trends",
+  "q": "Ionisation energy is the:",
+  "correct": "The minimum energy needed to remove an electron from a gaseous atom",
+  "wrong": [
+   "The energy released when an electron is added to a gaseous atom",
+   "The energy needed to break the bond between two bonded atoms",
+   "The measure of an atom's electron-attracting power in a bond"
+  ],
+  "exp": "First IE increases across a period (rising effective nuclear charge) and decreases down a group (atoms get bigger)."
+ },
+ {
+  "s": "Atomic Properties & Periodic Trends",
+  "q": "Why is the ionisation energy of Group 3A lower than that of Group 2A?",
+  "correct": "The np electron is shielded by the ns electrons, so it is easier to remove",
+  "wrong": [
+   "The ns electrons are shielded by the np electron, so they are easier to remove",
+   "Group 3A atoms are smaller, so their electrons are held more tightly",
+   "Paired electrons in the np orbital repel one another and are easy to remove"
+  ],
+  "exp": "A second irregularity occurs between 5A and 6A, where repulsion between paired p electrons makes ionisation easier."
+ },
+ {
+  "s": "Atomic Properties & Periodic Trends",
+  "q": "Electron affinity is the energy:",
+  "correct": "Released when an electron is added to a gaseous atom",
+  "wrong": [
+   "Needed to remove an electron from a gaseous atom",
+   "Needed to break the bond between two bonded atoms",
+   "Released when a neutron is added to the nucleus"
+  ],
+  "exp": "Electron affinities generally increase across a period, and non-metals have higher values than metals."
+ },
+ {
+  "s": "Atomic Properties & Periodic Trends",
+  "q": "Electronegativity is a measure of:",
+  "correct": "The electron-attracting power of an atom in a bond",
+  "wrong": [
+   "The energy needed to remove an electron from an atom",
+   "The energy released when an atom gains an electron",
+   "The distance between two bonded atoms' nuclei"
+  ],
+  "exp": "In HF, F attracts the shared electrons more than H, so the molecule is polar: δ⁺H–Fδ⁻."
+ },
+ {
+  "s": "Atomic Properties & Periodic Trends",
+  "q": "Which element is the most electronegative?",
+  "correct": "Fluorine (top right of the periodic table)",
+  "wrong": [
+   "Francium (bottom left of the periodic table)",
+   "Cesium (bottom left of the periodic table)",
+   "Lithium (top left of the periodic table)"
+  ],
+  "exp": "Electronegativity increases left to right across a period and decreases down a group; low values indicate metals, high values non-metals."
+ }
+];
+
+// ─── ENGINE ──────────────────────────────────────────────────────────────────
+const TOPICS = [...new Set(RAW.map(q => q.s))];
+const AVATARS = ['#3ddc84','#2ecc7e','#3498db','#e67e22','#e74c3c','#1abc9c','#f39c12','#9b59b6','#16a085','#2980b9'];
+
+let activeTopics = new Set(TOPICS);
+let quiz = [], cur = 0, score = 0, answered = false;
+let currentUser = {name:'', reg:''};
+let leaderboard = JSON.parse(localStorage.getItem('che31101_atomic_lb') || '[]');
+let comments = JSON.parse(localStorage.getItem('che31101_atomic_cmt') || '{}');
+
+function saveComments(){ localStorage.setItem('che31101_atomic_cmt', JSON.stringify(comments)); }
+function saveLB(){ localStorage.setItem('che31101_atomic_lb', JSON.stringify(leaderboard)); }
+
+// Fisher–Yates shuffle (unbiased)
+function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+// Put the correct answer at slot `pos`; shuffle the wrong answers into the other slots
+function buildQ(raw, pos) {
+  const opts = shuffle(raw.wrong);
+  opts.splice(pos, 0, raw.correct);
+  return { s: raw.s, q: raw.q, opts, ans: pos, exp: raw.exp };
+}
+
+// Correct-answer slots are spread evenly over A/B/C/D, then shuffled — no streak rule, no pattern to exploit
+function buildQuiz(){
+  const filtered = shuffle(RAW.filter(q => activeTopics.has(q.s)));
+  const slots = shuffle(filtered.map((_, i) => i % 4));
+  quiz = filtered.map((r, i) => buildQ(r, slots[i]));
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if(id==='leaderboard'){ renderLB(); document.querySelectorAll('.nav-btn')[1].classList.add('active'); }
+  else document.querySelectorAll('.nav-btn')[0].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function buildTopicGrid(){
+  const g = document.getElementById('topic-grid');
+  g.innerHTML = '';
+  TOPICS.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'topic-toggle on';
+    b.textContent = t;
+    b.onclick = function(){
+      if(activeTopics.has(t)){
+        if(activeTopics.size === 1) return;
+        activeTopics.delete(t); b.className='topic-toggle';
+      } else {
+        activeTopics.add(t); b.className='topic-toggle on';
+      }
+    };
+    g.appendChild(b);
+  });
+}
+
+function updateStatPlayers(){ document.getElementById('stat-players').textContent = leaderboard.length; }
+
+function startQuiz(){
+  const name = document.getElementById('inp-name').value.trim();
+  const reg = document.getElementById('inp-reg').value.trim();
+  if(!name){ alert('Please enter your name.'); return; }
+  currentUser = { name, reg };
+  buildQuiz();
+  if(!quiz.length){ alert('Select at least one topic.'); return; }
+  cur = 0; score = 0; answered = false;
+  showScreen('quiz'); renderQ();
+}
+
+function renderQ(){
+  if(cur >= quiz.length){ endQuiz(); return; }
+  const q = quiz[cur];
+  document.getElementById('prog-fill').style.width = (cur / quiz.length * 100) + '%';
+  document.getElementById('prog-label').textContent = `Question ${cur+1} of ${quiz.length}`;
+  document.getElementById('prog-score').textContent = `${score} pts`;
+  document.getElementById('q-section').textContent = q.s;
+  document.getElementById('q-text').textContent = q.q;
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  ['A','B','C','D'].forEach((l,i) => {
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    const letter = document.createElement('span'); letter.className = 'opt-letter'; letter.textContent = l;
+    const text = document.createElement('span'); text.textContent = q.opts[i];
+    b.appendChild(letter); b.appendChild(text);
+    b.onclick = function(){ if(!answered) select(i, b); };
+    opts.appendChild(b);
+  });
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('discussion-section').style.display = 'none';
+  answered = false;
+  window.scrollTo(0,0);
+}
+
+function select(i, btn){
+  answered = true;
+  const q = quiz[cur];
+  document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+  const fb = document.getElementById('feedback');
+  if(i === q.ans){
+    btn.classList.add('correct'); score++;
+    fb.className = 'feedback-box correct';
+    fb.innerHTML = `<strong>✓ Correct!</strong>${escHtml(q.exp)}`;
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn')[q.ans].classList.add('correct');
+    fb.className = 'feedback-box wrong';
+    fb.innerHTML = `<strong>✗ Not quite.</strong>${escHtml(q.exp)}`;
+  }
+  fb.style.display = 'block';
+  document.getElementById('next-btn').style.display = 'inline-flex';
+  document.getElementById('prog-score').textContent = `${score} pts`;
+  showDiscussion(cur);
+}
+
+function nextQ(){ cur++; renderQ(); }
+
+function showDiscussion(idx){
+  const key = `q_${quiz[idx].q.slice(0,30).replace(/\W+/g,'_')}`;
+  document.getElementById('discussion-section').style.display = 'block';
+  renderComments(key);
+  document.getElementById('comment-input').dataset.key = key;
+}
+
+function renderComments(key){
+  const list = document.getElementById('comments-list');
+  const c = comments[key] || [];
+  if(!c.length){ list.innerHTML = '<div class="no-comments">No discussion yet — be the first.</div>'; return; }
+  list.innerHTML = c.map(cm => `
+    <div class="comment">
+      <div class="comment-author">${escHtml(cm.name)}${cm.reg?' <span style="color:var(--muted);font-weight:400">· '+escHtml(cm.reg)+'</span>':''}</div>
+      <div class="comment-text">${escHtml(cm.text)}</div>
+      <div class="comment-time">${escHtml(cm.time)}</div>
+    </div>`).join('');
+  list.scrollTop = list.scrollHeight;
+}
+
+function postComment(){
+  const inp = document.getElementById('comment-input');
+  const key = inp.dataset.key, text = inp.value.trim();
+  if(!text) return;
+  if(!comments[key]) comments[key] = [];
+  const now = new Date();
+  comments[key].push({ name: currentUser.name, reg: currentUser.reg, text,
+    time: now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' · '+now.toLocaleDateString() });
+  saveComments(); inp.value = ''; renderComments(key);
+}
+
+function endQuiz(){
+  const total = quiz.length, pct = Math.round(score/total*100);
+  document.getElementById('result-ring').style.setProperty('--pct', pct+'%');
+  document.getElementById('result-pct').textContent = pct+'%';
+  document.getElementById('bd-correct').textContent = score;
+  document.getElementById('bd-wrong').textContent = total-score;
+  document.getElementById('bd-total').textContent = total;
+  let title, sub;
+  if(pct>=90){ title='Atomic Ace! 🏆'; sub='Excellent grasp of atomic structure, quantum numbers, electron configurations and periodic trends. You are ready for the test.'; }
+  else if(pct>=75){ title='Well done! ✅'; sub='Strong performance. Revisit the topics where you lost marks — quantum number rules and ionisation energy irregularities are common traps.'; }
+  else if(pct>=60){ title='Good foundation. 📚'; sub='You know the basics. Review the allowed values of n, l and mₗ, and the Pauli, Aufbau and Hund rules.'; }
+  else if(pct>=40){ title='Keep studying. 🔍'; sub='Go back through the slides: atomic structure first, then quantum numbers, then electron configuration and periodic trends.'; }
+  else { title='Back to the notes. 📖'; sub='Re-read the Atomic Theory slides carefully, then retry. Focus on what each quantum number describes and how to write configurations.'; }
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-sub').textContent = sub;
+  leaderboard.push({ name: currentUser.name, reg: currentUser.reg, score, total, pct,
+    time: new Date().toLocaleString(), color: AVATARS[Math.abs(hashStr(currentUser.name))%AVATARS.length] });
+  leaderboard.sort((a,b)=>b.pct-a.pct||b.score-a.score);
+  saveLB(); updateStatPlayers(); showScreen('result');
+}
+
+function restartQuiz(){
+  buildQuiz();
+  cur=0; score=0; answered=false; showScreen('quiz'); renderQ();
+}
+
+function renderLB(){
+  const rows = document.getElementById('lb-rows');
+  document.getElementById('lb-count').textContent = `${leaderboard.length} attempt${leaderboard.length!==1?'s':''}`;
+  if(!leaderboard.length){ rows.innerHTML='<div class="lb-empty">No attempts yet. Be the first!</div>'; return; }
+  const rc=['gold','silver','bronze'], re=['1st','2nd','3rd'];
+  rows.innerHTML = leaderboard.slice(0,20).map((e,i)=>{
+    const initials=e.name.split(' ').filter(Boolean).map(n=>n[0]).join('').toUpperCase().slice(0,2);
+    const isYou=currentUser.name&&e.name===currentUser.name;
+    return `<div class="lb-row">
+      <div class="lb-rank ${rc[i]||''}">${i<3?re[i]:i+1}</div>
+      <div class="lb-avatar" style="background:${e.color}22;color:${e.color}">${escHtml(initials)}</div>
+      <div class="lb-info">
+        <div class="lb-name">${escHtml(e.name)} ${isYou?'<span class="badge badge-you">you</span>':''}</div>
+        <div class="lb-meta">${e.reg?escHtml(e.reg)+' · ':''}${escHtml(e.time)}</div>
+      </div>
+      <div class="lb-score-wrap">
+        <div class="lb-score">${e.score}/${e.total}</div>
+        <div class="lb-pct">${e.pct}%</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function hashStr(s){ let h=0; for(let c of s){h=((h<<5)-h)+c.charCodeAt(0);h|=0;} return h; }
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+document.getElementById('stat-q').textContent = RAW.length;
+document.getElementById('stat-t').textContent = TOPICS.length;
+buildTopicGrid();
+updateStatPlayers();
+</script>
+</body>
+</html>
